@@ -1,5 +1,0 @@
-print "Enter the first number: "
-x = raw_input()
-print "Enter the second number: "
-y = raw_input()
-print "The addition is ",x+y
