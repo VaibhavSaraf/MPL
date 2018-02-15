@@ -1,0 +1,42 @@
+section .data
+msg: db "Enter your roll no: ",0x0A
+len: equ $-msg
+
+msg1: db "Entered roll number is "
+len1: equ $-msg1
+
+section .bss
+roll: resb 10
+
+section .text
+global main
+main:
+
+mov rax,1		;To print message "Enter the rollno"
+mov rdi,1
+mov rsi,msg
+mov rdx,len
+syscall
+
+mov rax,0		;To accept input from user
+mov rdi,1
+mov rsi,roll
+mov rdx,10		;We define this value in section .bss next to resb, thats the length
+syscall
+
+mov rax,1		;To print "Rollno is"
+mov rdi,1
+mov rsi,msg1
+mov rdx,len1
+syscall
+
+mov rax,1		;To print the roll number
+mov rdi,1
+mov rsi,roll
+mov rdx,10 	;Same as done while accepting
+syscall
+
+mov rax,60
+mov rdi,0
+syscall
+

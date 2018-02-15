@@ -1,0 +1,140 @@
+section .data
+array: db 12H,14H,15H,16H,17H
+cnt: db 0
+;address: dq 0
+d: db 0x0A
+cnt2: db 0
+;number: db 0
+
+menu: db "Menu:",0x0A
+	 db "1. Overlapping with string",0x0A
+	 db "2. Overlapping without string",0x0A
+	 db "3. Nonoverlapping with string",0x0A
+	 db "4. Nonoverlapping without string",0x0A
+	 db "5. Exit",0x0A	
+	 db "Choose your choice: "
+len: equ $-menu
+
+section .bss
+
+choice: resb 2
+address: resb 18
+number: resb 18
+
+%macro readwrite 3
+mov rax,%3
+mov rdi,1
+mov rsi,%1
+mov rdx,%2
+syscall
+%endmacro
+
+section .text
+global main
+main:
+readwrite menu,len,1
+readwrite choice,2,0
+
+cmp byte[choice],31H
+je next1
+
+cmp byte[choice],32H
+je next2
+
+cmp byte[choice],33H
+je next3
+
+cmp byte[choice],34H
+je next4
+
+cmp byte[choice],35H
+je next5
+
+next1:
+
+
+next2:
+
+
+next3:
+
+
+next4:
+mov rsi,array
+mov byte[cnt],5
+up:
+mov rbx,rsi
+push rsi
+call htoa16
+pop rsi
+mov dl,byte[rsi]
+push rsi
+call htoa2
+pop rsi
+inc rsi
+dec byte[cnt]
+jnz up
+mov rsi,array
+mov rdi,array+6
+mov byte[cnt2],5
+up4:
+mov cl,byte[rsi]
+mov byte[rdi],cl
+inc rsi
+inc rdi
+dec byte[cnt2]
+jnz up4
+mov byte[cnt2],10
+up5:
+mov rdi,address
+readwrite address,16,1
+readwrite d,1,1
+inc rdi
+dec byte[cnt2]
+jnz up5
+jmp main
+
+htoa16:
+mov rdi,address
+mov byte[cnt2],16
+up2:
+rol rbx,04
+mov dl,bl
+AND dl,0FH
+cmp dl,09
+jbe nxt2
+add dl,07
+nxt2:
+add dl,30H
+mov byte[rdi],dl
+inc rdi
+dec byte[cnt2]
+jnz up2
+readwrite address,16,1
+readwrite d,1,1
+ret
+
+htoa2:
+mov rdi,number
+mov byte[cnt2],2
+up3:
+rol dl,04
+mov cl,dl
+AND cl,0FH
+cmp cl,09
+jbe nxt3
+add cl,07
+nxt3:
+add cl,30H
+mov byte[rdi],cl
+inc rdi
+dec byte[cnt2]
+jnz up3
+readwrite number,2,1
+readwrite d,1,1
+ret
+
+next5:
+mov rax,60
+mov rdi,0
+syscall
