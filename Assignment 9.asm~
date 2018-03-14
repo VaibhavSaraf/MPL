@@ -1,0 +1,4 @@
+section .data
+
+msg: db "The factorial of the entered number is: "
+len: equ $-msg
